@@ -1,25 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+// App.js
+import React, { useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import ProductList from "../src/Component/ProductList";
+import ComparePage from "../src/Component/ComparePage";
+import Header from "./Nevigation/header";
 
-function App() {
+const App = () => {
+  const [compareProducts, setCompareProducts] = useState([]);
+
+  const addToCompare = (product) => {
+    if (!compareProducts.some((p) => p.id === product.id)) {
+      setCompareProducts((prev) => [...prev, product]);
+    }
+  };
+
+  const removeFromCompare = (productId) => {
+    setCompareProducts((prev) => prev.filter((p) => p.id !== productId));
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Header />
+
+      <Routes>
+        <Route path="/" element={<ProductList addToCompare={addToCompare} />} />
+        <Route
+          path="/compare"
+          element={
+            <ComparePage
+              compareProducts={compareProducts}
+              removeFromCompare={removeFromCompare}
+            />
+          }
+        />
+      </Routes>
+    </>
   );
-}
+};
 
 export default App;
